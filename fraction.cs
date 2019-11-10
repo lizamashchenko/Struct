@@ -8,83 +8,125 @@ namespace fraction
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
+            int x = 3;
+            int y = 5;
+            fraction fr1 = new fraction();
+            fr1.numerator = x;
+            fr1.denominator = y;
+            fr1.Write();
+            (fr1 + fr1).Write();
         }
         struct fraction
         {
             public int numerator;
             public int denominator;
-            
-            public int Write(int num, int denom)
+
+            public void Write()
             {
-                return (num + '/' + denom);
+                Console.WriteLine(numerator + "/" + denominator);
             }
-            public int Plus(int num1, int denom1,int num2,int denom2)
+            public static fraction operator +(fraction fr1, fraction fr2)
             {
                 int NumSum;
                 int CommonDenom;
-                if(denom1!=denom2)
+                if (fr1.denominator != fr2.denominator)
                 {
-                    CommonDenom = CommonValue(denom1, denom2);
-                    NumSum = num1 * denom2 + num2 * denom1;
+                    CommonDenom = CommonValue(fr1.denominator, fr2.denominator);
+                    NumSum = fr1.numerator * fr2.denominator + fr2.numerator * fr1.denominator;
                 }
                 else
                 {
-                    CommonDenom = denom1;
-                    NumSum = num1 + num2;
+                    CommonDenom = fr1.denominator;
+                    NumSum = fr1.numerator + fr2.numerator;
                 }
-                return NumSum + '/' + CommonDenom;
+
+                fraction f;
+                f.numerator = NumSum;
+                f.denominator = CommonDenom;
+                return f;
             }
-            public int Minus(int num1, int denom1, int num2, int denom2)
+            public static fraction operator -(fraction fr1, fraction fr2)
             {
                 int NumDifference;
                 int CommonDenom;
-                if (denom1 != denom2)
+                if (fr1.denominator != fr2.denominator)
                 {
-                    CommonDenom = CommonValue(denom1, denom2);
-                    NumDifference = num1 * denom2 - num2 * denom1;
+                    CommonDenom = CommonValue(fr1.denominator, fr2.denominator);
+                    NumDifference = fr1.numerator * fr2.denominator - fr2.numerator * fr1.denominator;
                 }
                 else
                 {
-                    CommonDenom = denom1;
-                    NumDifference = num1 - num2;
+                    CommonDenom = fr1.denominator;
+                    NumDifference = fr1.numerator - fr2.numerator;
                 }
-                return NumDifference + '/' + CommonDenom;
+                fraction f;
+                f.numerator = NumDifference;
+                f.denominator = CommonDenom;
+                return f;
             }
-            public int Multiply(int num1, int denom1, int num2, int denom2)
+            public static fraction operator *(fraction fr1, fraction fr2)
             {
-                int MultNum = num1 * num2;
-                int MultDenom = denom1 * denom2;
-                return MultNum + '/' + MultDenom;
+                int MultNum = fr1.numerator * fr2.numerator;
+                int MultDenom = fr1.denominator * fr2.denominator;
+                fraction f;
+                f.numerator = MultNum;
+                f.denominator = MultDenom;
+                return f;
             }
-            public int Division(int num1, int denom1, int num2, int denom2)
+            public static fraction operator /(fraction fr1, fraction fr2)
             {
-                int DivNum = num1 * denom2;
-                int DivDenom = denom1 * num2;
-                return DivNum + '/' + DivDenom;
+                int DivNum = fr1.numerator * fr2.denominator;
+                int DivDenom = fr1.denominator * fr2.numerator;
+                fraction f;
+                f.numerator = DivNum;
+                f.denominator = DivDenom;
+                return f;
             }
-            static void Reduction()
+            public static fraction operator !(fraction f1)
             {
-                if (CanReduce(numerator,denominator)) Reduce();
+                fraction f;
+                f.numerator = f1.numerator;
+                f.denominator = f1.denominator;
+                if (CanReduce(f1))
+                {
+                    f = Reduce(f1);
+                }
+                return f;
+            }
+            public static fraction Reduce(fraction f1)
+            {
+                int value = FindCommonValue(f1.numerator, f1.denominator);
+                fraction f;
+                f.numerator = f1.numerator / value;
+                f.denominator = f1.denominator / value;
+                return f;
             }
         }
+
+
+
+
+
+
+
         static int CommonValue(int a, int b)
         {
             int CommonValue = 0;
             CommonValue = a * b;
             return CommonValue;
         }
-        static bool CanReduce(int num, int denom)
+        static bool CanReduce(fraction f1)
         {
-            if (HaveCommonValue(num,denom)) return true;
+            if (HaveCommonValue(f1.numerator, f1.denominator)) return true;
             else return false;
         }
-        static bool HaveCommonValue(int a,int b)
+        static bool HaveCommonValue(int a, int b)
         {
-            if (a > b) 
+            if (a > b)
             {
-                for (int i = 1; i < a / 2; i++) 
+                for (int i = 1; i < a / 2; i++)
                 {
                     if (a % i == 0 && b % b == 0)
                     {
@@ -104,20 +146,15 @@ namespace fraction
             }
             return false;
         }
-        static int FindCommonValue(int a,int b)
+        static int FindCommonValue(int a, int b)
         {
             int commonvalue = 0;
-            for (int i=1;i<a/2;i++)
+            for (int i = 1; i < a / 2; i++)
             {
                 if (a % i == 0 && b % i == 0) commonvalue = i;
             }
             return commonvalue;
         }
-        static void Reduce()
-        {
-            int value = FindCommonValue(numerator, denominator);
-            numerator = numerator / value;
-            denominator = denominator / value;
-        }
+
     }
 }
