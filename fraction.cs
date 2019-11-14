@@ -15,17 +15,16 @@ namespace fraction
             fraction fr1 = new fraction();
             fr1.numerator = x;
             fr1.denominator = y;
-            fr1.Write();
-            (fr1 + fr1).Write();
+            Console.WriteLine(fr1);
+            Console.WriteLine(fr1+fr1);
         }
         struct fraction
         {
             public int numerator;
             public int denominator;
-
-            public void Write()
+            public override string ToString()
             {
-                Console.WriteLine(numerator + "/" + denominator);
+                return numerator + "/" + denominator;
             }
             public static fraction operator +(fraction fr1, fraction fr2)
             {
